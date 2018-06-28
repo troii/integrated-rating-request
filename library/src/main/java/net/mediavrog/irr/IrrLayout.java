@@ -9,11 +9,9 @@ import android.widget.FrameLayout;
 
 import net.mediavrog.ruli.RuleEngine;
 
-/**
- * Created by maikvlcek on 1/26/16.
- */
 // TODO: persist across orientation changes etc
 public class IrrLayout extends FrameLayout {
+
     public static final String TAG = IrrLayout.class.getSimpleName();
 
     /**
@@ -27,15 +25,17 @@ public class IrrLayout extends FrameLayout {
     }
 
     public interface OnUserDecisionListener {
-        void onAccept(Context ctx, State s);
+        void onLike(Context ctx);
 
-        void onDismiss(Context ctx, State s);
+        void onDislike(Context ctx);
     }
 
     public interface OnUserActionListener {
         void onRate(Context ctx);
 
         void onFeedback(Context ctx);
+
+        void onDismiss(Context ctx, State s);
     }
 
     public interface OnToggleVisibilityListener {
@@ -74,10 +74,6 @@ public class IrrLayout extends FrameLayout {
      * or should rather wait for the user to provide a rule engine to the layout.
      */
     private boolean mUseCustomEngine;
-
-    private String mRatingUrl = null;
-
-    private String mFeedbackUrl = null;
 
     private View mNudgeView = null;
 
@@ -134,13 +130,12 @@ public class IrrLayout extends FrameLayout {
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.IrrLayout);
 
             if (ta != null) {
-                mRatingUrl = ta.getString(R.styleable.IrrLayout_ratingUrl);
-
-                mFeedbackUrl = ta.getString(R.styleable.IrrLayout_feedbackUrl);
+                String ratingUrl = ta.getString(R.styleable.IrrLayout_ratingUrl);
+                String feedbackUrl = ta.getString(R.styleable.IrrLayout_feedbackUrl);
 
                 // set default listener if at least one of rating or feedback url was given
-                if (mRatingUrl != null || mFeedbackUrl != null) {
-                    mActionListener = new DefaultOnUserActionListener(mRatingUrl, mFeedbackUrl);
+                if (ratingUrl != null || feedbackUrl != null) {
+                    mActionListener = new DefaultOnUserActionListener(ratingUrl, feedbackUrl);
                 }
 
                 // check if user wants to use a custom rule engine
@@ -221,11 +216,8 @@ public class IrrLayout extends FrameLayout {
 
     /**
      * Sets up the default rule engine with attributes passed via layout params.
-     *
-     * @param ctx
-     * @param ta
      */
-    void setupDefaultRuleEngine(Context ctx, TypedArray ta) {
+    private void setupDefaultRuleEngine(Context ctx, TypedArray ta) {
         int appStartCount = ta.getInt(R.styleable.IrrLayout_defaultRuleAppStartCount, DefaultRuleEngine.DEFAULT_APP_START_COUNT);
 
         int distinctDays = ta.getInt(R.styleable.IrrLayout_defaultRuleDistinctDays, DefaultRuleEngine.DEFAULT_DISTINCT_DAYS);
@@ -238,7 +230,7 @@ public class IrrLayout extends FrameLayout {
         boolean autoEval = ta.getBoolean(R.styleable.IrrLayout_autoEvaluateDefaultRuleEngine, true);
 
         DefaultRuleEngine engine = DefaultRuleEngine.newInstance(ctx, appStartCount, distinctDays, postponeDays, maxDismissCount);
-        setOnUserDecisionListener(engine.getListener());
+        setOnUserActionListener(engine.getListener());
 
         configureEngine(engine);
 
@@ -272,10 +264,11 @@ public class IrrLayout extends FrameLayout {
 
     void hide() {
         if (mVisibilityListener != null) mVisibilityListener.onHide(this);
+        setState(State.HIDDEN);
     }
 
-    void dismiss(State s) {
-        if (mDecisionListener != null) mDecisionListener.onDismiss(getContext(), s);
+    void dismiss(State state) {
+        if (mActionListener != null) mActionListener.onDismiss(getContext(), state);
         hide();
     }
 
@@ -304,8 +297,8 @@ public class IrrLayout extends FrameLayout {
         findViewById(mNudgeAcceptBtnResId).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDecisionListener != null)
-                    mDecisionListener.onAccept(getContext(), State.NUDGE);
+                if (mActionListener != null) mActionListener.onDismiss(getContext(), State.NUDGE);
+                if (mDecisionListener != null) mDecisionListener.onLike(getContext());
                 setState(State.RATE);
             }
         });
@@ -313,8 +306,8 @@ public class IrrLayout extends FrameLayout {
         findViewById(mNudgeDeclineBtnResId).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDecisionListener != null)
-                    mDecisionListener.onDismiss(getContext(), State.NUDGE);
+                if (mActionListener != null) mActionListener.onDismiss(getContext(), State.NUDGE);
+                if (mDecisionListener != null) mDecisionListener.onDislike(getContext());
                 setState(State.FEEDBACK);
             }
         });
@@ -325,7 +318,6 @@ public class IrrLayout extends FrameLayout {
         findViewById(mRateAcceptBtnResId).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDecisionListener != null) mDecisionListener.onAccept(getContext(), State.RATE);
                 if (mActionListener != null) mActionListener.onRate(getContext());
                 hide();
             }
@@ -344,8 +336,6 @@ public class IrrLayout extends FrameLayout {
         findViewById(mFeedbackAcceptBtnResId).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDecisionListener != null)
-                    mDecisionListener.onAccept(getContext(), State.FEEDBACK);
                 if (mActionListener != null) mActionListener.onFeedback(getContext());
                 hide();
             }
@@ -361,8 +351,6 @@ public class IrrLayout extends FrameLayout {
 
     /**
      * View changes for current step
-     *
-     * @param step
      */
     void setState(State step) {
         switch (step) {

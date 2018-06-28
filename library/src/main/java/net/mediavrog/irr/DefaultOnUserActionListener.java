@@ -15,10 +15,9 @@ import android.net.Uri;
  * will use {@link Activity#startActivityForResult} with request codes
  * {@link net.mediavrog.irr.DefaultOnUserActionListener#RATE_REQUEST}
  * and {@link net.mediavrog.irr.DefaultOnUserActionListener#FEEDBACK_REQUEST}.
- *
- * created by maik_vlcek
  */
 public class DefaultOnUserActionListener implements IrrLayout.OnUserActionListener {
+
     public static int RATE_REQUEST = 7650;
     public static int FEEDBACK_REQUEST = 7651;
 
@@ -26,7 +25,11 @@ public class DefaultOnUserActionListener implements IrrLayout.OnUserActionListen
 
     private String mFeedbackUrl;
 
-    public DefaultOnUserActionListener(String rateUrl, String feedbackUrl){
+    public DefaultOnUserActionListener() {
+        this(null, null);
+    }
+
+    public DefaultOnUserActionListener(String rateUrl, String feedbackUrl) {
         mRatingUrl = rateUrl;
         mFeedbackUrl = feedbackUrl;
     }
@@ -35,6 +38,7 @@ public class DefaultOnUserActionListener implements IrrLayout.OnUserActionListen
     public void onRate(Context ctx) {
         if (mRatingUrl == null) mRatingUrl = getDefaultRatingUrl(ctx);
         if (mRatingUrl != null) startViewIntent(ctx, mRatingUrl, RATE_REQUEST);
+        DidRateRule.trackRated(ctx);
     }
 
     @Override
@@ -42,16 +46,23 @@ public class DefaultOnUserActionListener implements IrrLayout.OnUserActionListen
         if (mFeedbackUrl != null) startViewIntent(ctx, mFeedbackUrl, FEEDBACK_REQUEST);
     }
 
-    void startViewIntent(Context ctx, String uri, int requestCode) {
+    @Override
+    public void onDismiss(Context ctx, IrrLayout.State s) {
+        if (s == IrrLayout.State.NUDGE) {
+            DismissRule.trackDismissal(ctx);
+        }
+    }
+
+    String getDefaultRatingUrl(Context ctx) {
+        return "https://play.google.com/store/apps/details?id=" + ctx.getPackageName();
+    }
+
+    private void startViewIntent(Context ctx, String uri, int requestCode) {
         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         if (ctx instanceof Activity) {
             ((Activity) ctx).startActivityForResult(i, requestCode);
         } else {
             ctx.startActivity(i);
         }
-    }
-
-    String getDefaultRatingUrl(Context ctx) {
-        return "https://play.google.com/store/apps/details?id=" + ctx.getPackageName();
     }
 }

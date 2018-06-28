@@ -6,26 +6,31 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
 import net.mediavrog.irr.DefaultOnToggleVisibilityListener;
+import net.mediavrog.irr.DefaultOnUserActionListener;
 import net.mediavrog.irr.DefaultRuleEngine;
 import net.mediavrog.irr.IrrLayout;
 
 public class DefaultEngineSnackBarActivity extends DefaultEngineActivity {
+
     public static final String TAG = DefaultEngineSnackBarActivity.class.getSimpleName();
 
-    /**
-     * @return
-     */
     protected int getLayoutResId() {
         return R.layout.activity_default_engine_snackbar;
     }
 
     protected void initialize() {
-        irr = (IrrLayout) findViewById(R.id.irr_layout);
+        irr = findViewById(R.id.irr_layout);
         engine = (DefaultRuleEngine) irr.getRuleEngine();
-        engine.setListener(new DefaultRuleEngine.DefaultOnUserDecisionListener() {
+        engine.setListener(new DefaultOnUserActionListener() {
             @Override
-            public void onAccept(Context ctx, IrrLayout.State s) {
-                super.onAccept(ctx, s);
+            public void onRate(Context ctx) {
+                super.onRate(ctx);
+                evaluateRules(true);
+            }
+
+            @Override
+            public void onFeedback(Context ctx) {
+                super.onFeedback(ctx);
                 evaluateRules(true);
             }
 

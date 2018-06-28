@@ -4,9 +4,6 @@ import android.content.SharedPreferences;
 
 import net.mediavrog.ruli.Value;
 
-/**
- * Created by maikvlcek on 1/27/16.
- */
 public abstract class PreferenceValue<T> extends Value<T> {
 
     public interface PreferenceProvider {

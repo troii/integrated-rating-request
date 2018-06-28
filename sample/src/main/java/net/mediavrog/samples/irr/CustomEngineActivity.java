@@ -34,7 +34,7 @@ public class CustomEngineActivity extends AppCompatActivity {
         setContentView(R.layout.activity_custom_engine);
 
         // status text field for debug info
-        dump = (TextView) findViewById(R.id.dump);
+        dump = findViewById(R.id.dump);
 
         // keep a calendar instance to effectively modify the date
         cal = Calendar.getInstance();
@@ -64,12 +64,17 @@ public class CustomEngineActivity extends AppCompatActivity {
         // to the background to avoid blocking the UI
         engine.evaluate();
 
-        irr = (IrrLayout) findViewById(R.id.irr_layout);
+        irr = findViewById(R.id.irr_layout);
         irr.setRuleEngine(engine); // layout attr irr:useCustomRuleEngine must be set to true!
-        irr.setOnUserDecisionListener(new IrrLayout.OnUserDecisionListener() {
+        irr.setOnUserActionListener(new IrrLayout.OnUserActionListener() {
             @Override
-            public void onAccept(Context ctx, IrrLayout.State s) {
-                Toast.makeText(ctx, "Accepted in state " + s.toString(), Toast.LENGTH_LONG).show();
+            public void onRate(Context ctx) {
+                Toast.makeText(ctx, "Rated", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFeedback(Context ctx) {
+                Toast.makeText(ctx, "Feedback", Toast.LENGTH_LONG).show();
             }
 
             @Override

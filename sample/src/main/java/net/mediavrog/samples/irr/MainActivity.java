@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import net.mediavrog.irr.AppUsageRule;
 import net.mediavrog.irr.DefaultRuleEngine;
 
 import java.net.URI;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // simulate an app start; this should really go into a custom Application#onStart
-        DefaultRuleEngine.trackAppStart(this);
+        AppUsageRule.trackAppStart(this);
 
         setContentView(R.layout.activity_main);
 
