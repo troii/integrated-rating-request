@@ -7,8 +7,8 @@ android {
         applicationId "net.mediavrog.samples.irr"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 114
-        versionName "1.1.4"
+        versionCode 200
+        versionName '2.0.0'
     }
 
     buildTypes {
