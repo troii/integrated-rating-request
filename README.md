@@ -1,10 +1,9 @@
-# Integrated Rating Request [ ![Download](https://api.bintray.com/packages/mediavrog/maven/integrated-rating-request/images/download.svg) ](https://bintray.com/mediavrog/maven/integrated-rating-request/_latestVersion)
-<sup>Badges galore</sup>
-[![Gitter](https://badges.gitter.im/mediavrog/integrated-rating-request.svg)](https://gitter.im/mediavrog/integrated-rating-request?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge)
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Integrated%20Rating%20Request-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3283)
-[![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
-[![API](https://img.shields.io/badge/API-11%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=11)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/troii/integrated-rating-request.svg?branch=master)](https://travis-ci.org/troii/integrated-rating-request)
+[![JCenter](https://api.bintray.com/packages/daberni/oss/integrated-rating-request/images/download.svg)](https://bintray.com/daberni/oss/integrated-rating-request/_latestVersion)
+
+# Integrated Rating Request 
+
+Forked from [mediavrog/integrated-rating-request](https://github.com/mediavrog/integrated-rating-request)
 
 #### A better way to ask for ratings.
 
@@ -18,21 +17,6 @@ As [popularized by Circa](https://medium.com/circa/the-right-way-to-ask-users-to
 * .. or supply your own RuleEngine altogether for full control (backed by [ruli](https://github.com/mediavrog/ruli))
 * adjustable callbacks for rating and feedback
 * list adapter decorator can manage visibility of irr in a list automatically so you don't have to
-
-## Demo application
-
-<a href="https://play.google.com/store/apps/details?id=net.mediavrog.samples.irr" target="_blank">
-  <img alt="Get it on Google Play"
-      src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="60"/>
-</a>
-
-## Support / Donate
-
-You use this library or want to support development? Send some Bitcoin to 14gyxZJMQ7DyrzjQYEDhz7FBo6HH57hKFj
-
-<img src="https://i.imgur.com/GBYkw9M.png" width="125">
-
-Thanks!
 
 ## Getting started
 
@@ -243,56 +227,6 @@ irr = (IrrLayout) findViewById(R.id.irr_layout);
 irr.setRuleEngine(engine); // layout attr irr:useCustomRuleEngine must be set to true!
 ```
 
-## Contributers
-
-<!--* Dec 22, 13 - Vladimir Mironov ([@MironovNsk](https://github.com/nsk-mironov)) - Custom Expanded Panel Height-->
-
-If you have an awesome pull request, send it over!
-
-## Changelog
-
-* 1.1.2
-  - Removed non-library resources
-  - fix for onDismiss/onAccept events in Nudge state
-
-* 1.1.1 
-  - Fixed bug with dicustom view types in IrrAdapterDecorator
-  
-* 1.1.0
-  - Initial Release backed by ruli 1.1.0 
-
-## Known users
-
-| App | Description | Integration |
-| --- | --- | --- |
-| [Suikakeibo](https://play.google.com/store/apps/details?id=net.mediavrog.ic_card_expensetracker) | Suica reader/ledger - track your expenses with a simple touch | <a href="https://github.com/mediavrog/integrated-rating-request/blob/master/art/app-suikakeibo.png?raw=true" target="_blank"><img src="https://github.com/mediavrog/integrated-rating-request/blob/master/art/app-suikakeibo.png?raw=true" width="100"></a>
-| [Monitor - EnergyHive & Engage](https://play.google.com/store/apps/details?id=com.danielstone.energyhive) | Monitor is a native and lightweight unofficial client for the EnergyHive and Efergy Engage Internet of Things platforms, beautifully designed with material design and free of adverts. | <a href="http://i.imgur.com/gzqPgss.png" target="_blank"><img src="http://i.imgur.com/gzqPgss.png" width="100"></a>
-| [+Arduino Control](https://play.google.com/store/apps/details?id=com.juniordamacena.maiscontrolearduino) | Through the +Arduino Control you can send voice and text commands to your Arduino via Bluetooth and still simplify your program. | <a href="https://raw.githubusercontent.com/jdamacena/integrated-rating-request/master/art/app_plus_arduino_control.png" target="_blank"><img src="https://raw.githubusercontent.com/jdamacena/integrated-rating-request/master/art/app_plus_arduino_control.png" width="100"></a>
-
-If you are using the library and you would like to have your app listed, simply send a pull request.
-
 ## License
 
-```
-The MIT License (MIT)
-
-Copyright (c) 2016 mediavrog
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-```
+This project is licensed under the [MIT License](LICENSE)
