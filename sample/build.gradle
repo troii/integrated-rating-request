@@ -1,36 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 27
 
     defaultConfig {
         applicationId "net.mediavrog.samples.irr"
-        minSdkVersion 11
-        targetSdkVersion 23
-        versionCode 2016081101
+        minSdkVersion 14
+        targetSdkVersion 27
+        versionCode 1
         versionName "1.1.2"
-    }
-
-    String securePropertiesPath = project.projectDir.path + "/secure.properties"
-    if (new File(securePropertiesPath).exists()) {
-        Properties props = new Properties()
-        props.load(new FileInputStream(file(securePropertiesPath)))
-
-        signingConfigs {
-            release {
-                storeFile file(props['key.store'])
-                storePassword props['key.store.password']
-                keyAlias props['key.alias']
-                keyPassword props['key.alias.password']
-            }
-        }
-    } else {
-        System.out.println("WARNING: Could not find secure.properties")
-        // Building from IDE's "Run" button
-        signingConfigs {
-            release {}
-        }
     }
 
     buildTypes {
@@ -40,17 +18,7 @@ android {
             buildConfigField "boolean", "DEBUG_FLAG", "true"
             buildConfigField "boolean", "LOG", "true"
         }
-        staging {
-            debuggable true
-            versionNameSuffix "|S"
-            signingConfig signingConfigs.release
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "boolean", "DEBUG_FLAG", "false"
-            buildConfigField "boolean", "LOG", "true"
-        }
         release {
-            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "DEBUG_FLAG", "false"
@@ -61,6 +29,6 @@ android {
 
 
 dependencies {
-    compile project (':library')
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    implementation project (':library')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
 }

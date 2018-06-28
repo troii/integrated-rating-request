@@ -1,38 +1,31 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
-
-ext {
-    supportLibVersion = '23.1.1'
-    lib_version = '1.1.2'
-    lib_version_code = 2016081101
-}
-
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'com.novoda:bintray-release:0.3.4'
+        classpath 'com.novoda:bintray-release:0.8.1'
     }
 }
 
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
 android {
-    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_VERSION)
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+    compileSdkVersion 27
 
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_VERSION)
-        versionCode lib_version_code
-        versionName lib_version
+        minSdkVersion 14
+        targetSdkVersion 27
+        versionCode 112
+        versionName '1.1.2'
     }
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
-    compile 'net.mediavrog:ruli:1.1.0'
-    compile "com.android.support:appcompat-v7:${supportLibVersion}"
-    compile "com.android.support:support-v4:${supportLibVersion}"
+    api 'net.mediavrog:ruli:1.1.0'
+    implementation 'com.android.support:support-v4:27.1.1'
+
+    testImplementation 'junit:junit:4.12'
 }
 
 // PUBLISHING
@@ -42,12 +35,13 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 
 publish {
     dryRun = false
-    groupId = 'net.mediavrog'
+    userOrg = 'troii'
+    groupId = 'com.troii'
     artifactId = 'integrated-rating-request'
-    publishVersion = lib_version
+    publishVersion = android.defaultConfig.versionName
     licences = ["MIT"]
     bintrayUser = properties.getProperty("bintrayUser")
     bintrayKey = properties.getProperty("bintrayApiKey")
     desc = 'Smart and customizable rating requests, which won\'t annoy your users.'
-    website = 'https://github.com/mediavrog/integrated-rating-request'
+    website = 'https://github.com/troii/integrated-rating-request'
 }
