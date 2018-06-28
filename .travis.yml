@@ -18,7 +18,7 @@ android:
     - sys-img-armeabi-v7a-android-27
 
 before_install:
-  - yes | sdkmanager --licenses
+  - yes | sdkmanager "build-tools;27.0.3"
   - echo "bintray.user=$BINTRAY_USER" >> gradle.properties
   - echo "bintray.apikey=$BINTRAY_API_KEY" >> gradle.properties
 
