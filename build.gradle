@@ -21,6 +21,12 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+// travis-ci test
+task connectedCheck {
+
+}
+
+// travis-ci publish
 task publish(dependsOn: 'library:bintrayUpload')
 
 configure(publish) {
