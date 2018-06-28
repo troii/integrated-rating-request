@@ -29,7 +29,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-task sourceJar(type: Jar) {
+task sourcesJar(type: Jar) {
     classifier "sources"
     from android.sourceSets.main.java.srcDirs
 }
@@ -37,6 +37,10 @@ task sourceJar(type: Jar) {
 group "com.troii"
 version android.defaultConfig.versionName
 project.archivesBaseName = 'integrated-rating-request'
+
+artifacts {
+    archives sourcesJar
+}
 
 install {
     repositories.mavenInstaller {
@@ -76,7 +80,8 @@ bintray {
     key = project.property("bintray.apikey")
     configurations = ['archives']
     pkg {
-        repo = 'oss'
+        userOrg = 'troii'
+        repo = 'maven'
         name = project.archivesBaseName
         description 'A polite way to ask for ratings.'
         websiteUrl = 'https://github.com/troii/integrated-rating-request'
