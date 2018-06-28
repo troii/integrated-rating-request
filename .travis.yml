@@ -19,8 +19,8 @@ android:
 
 before_install:
   - yes | sdkmanager "platforms;android-27"
-  - yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
-  - yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+  - echo "bintray.user=$BINTRAY_USER" >> gradle.properties
+  - echo "bintray.apikey=$BINTRAY_API_KEY" >> gradle.properties
 
 deploy:
   provider: script

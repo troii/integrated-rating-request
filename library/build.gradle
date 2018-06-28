@@ -3,12 +3,13 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.novoda:bintray-release:0.8.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
-
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 27
@@ -28,20 +29,57 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-// PUBLISHING
-// run as 'gradle clean build bintrayUpload'
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+group "com.troii"
+version android.defaultConfig.versionName
+project.archivesBaseName = 'integrated-rating-request'
 
-publish {
-    dryRun = false
-    userOrg = 'troii'
-    groupId = 'com.troii'
-    artifactId = 'integrated-rating-request'
-    publishVersion = android.defaultConfig.versionName
-    licences = ["MIT"]
-    bintrayUser = properties.getProperty("bintrayUser")
-    bintrayKey = properties.getProperty("bintrayApiKey")
-    desc = 'Smart and customizable rating requests, which won\'t annoy your users.'
-    website = 'https://github.com/troii/integrated-rating-request'
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name 'Integrated Rating Request'
+            description 'A polite way to ask for ratings.'
+            url 'https://github.com/troii/integrated-rating-request'
+            inceptionYear '2018'
+
+            packaging 'aar'
+            groupId project.group
+            artifactId project.archivesBaseName
+
+            licenses {
+                license {
+                    name 'The MIT License (MIT)'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                url 'https://github.com/troii/integrated-rating-request'
+                connection 'scm:git@github.com:troii/integrated-rating-request.git'
+            }
+            developers {
+                developer {
+                    id "daberni"
+                    name "Bernhard Danecker"
+                    email "bernhard.danecker@gmail.com"
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = project.property("bintray.user")
+    key = project.property("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = 'oss'
+        name = project.archivesBaseName
+        description 'A polite way to ask for ratings.'
+        websiteUrl = 'https://github.com/troii/integrated-rating-request'
+        vcsUrl = 'https://github.com/troii/integrated-rating-request.git'
+        licenses = ['MIT']
+        publish = true
+        version {
+            name = project.version
+        }
+    }
 }
