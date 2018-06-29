@@ -12,7 +12,16 @@ public class DidRateRule extends SimpleRule<Boolean> {
 
     private static final String PREF_KEY_DID_RATE = "didRate";
 
-    DidRateRule(PreferenceValue.PreferenceProvider pp) {
+    public DidRateRule(final Context context) {
+        this(new PreferenceValue.PreferenceProvider() {
+            @Override
+            public SharedPreferences getPreferences() {
+                return DefaultRuleEngine.getPreferences(context);
+            }
+        });
+    }
+
+    public DidRateRule(PreferenceValue.PreferenceProvider pp) {
         super(PreferenceValue.b(pp, PREF_KEY_DID_RATE), EQ, false);
     }
 

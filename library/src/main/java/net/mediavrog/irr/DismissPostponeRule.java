@@ -1,5 +1,8 @@
 package net.mediavrog.irr;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import net.mediavrog.ruli.Value;
 
 import java.text.SimpleDateFormat;
@@ -11,7 +14,16 @@ import static net.mediavrog.ruli.SimpleRule.Comparator.LT_EQ;
 
 public class DismissPostponeRule extends DismissRule<String> {
 
-    DismissPostponeRule(PreferenceValue.PreferenceProvider pp, final int postponeDays) {
+    public DismissPostponeRule(final Context context, int maxDismissCount) {
+        this(new PreferenceValue.PreferenceProvider() {
+            @Override
+            public SharedPreferences getPreferences() {
+                return DefaultRuleEngine.getPreferences(context);
+            }
+        }, maxDismissCount);
+    }
+
+    public DismissPostponeRule(PreferenceValue.PreferenceProvider pp, final int postponeDays) {
         super(PreferenceValue.s(pp, PREF_KEY_LAST_DISMISSED_AT), LT_EQ, new Value<String>() {
             @Override
             public String get() {
