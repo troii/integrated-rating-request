@@ -26,7 +26,7 @@ Easily reference the library in your Android projects using this dependency in y
 
 ```java
 dependencies {
-    compile 'net.mediavrog:integrated-rating-request:1.1.2'
+    implementation 'com.troii:integrated-rating-request:2.0.1'
 }
 ```
 
