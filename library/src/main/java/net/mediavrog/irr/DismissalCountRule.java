@@ -1,19 +1,13 @@
 package net.mediavrog.irr;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import static net.mediavrog.ruli.SimpleRule.Comparator.LT;
 
 public class DismissalCountRule extends DismissRule<Integer> {
 
-    public DismissalCountRule(final Context context, int maxDismissCount) {
-        this(new PreferenceValue.PreferenceProvider() {
-            @Override
-            public SharedPreferences getPreferences() {
-                return DefaultRuleEngine.getPreferences(context);
-            }
-        }, maxDismissCount);
+    public DismissalCountRule(Context context, int maxDismissCount) {
+        this(new DefaultPreferenceProvider(context), maxDismissCount);
     }
 
     public DismissalCountRule(PreferenceValue.PreferenceProvider pp, int maxDismissCount) {

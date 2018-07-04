@@ -1,7 +1,6 @@
 package net.mediavrog.irr;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import net.mediavrog.ruli.Rule;
 import net.mediavrog.ruli.RuleEngine;
@@ -33,25 +32,12 @@ public class DefaultRuleEngine extends RuleEngine {
      */
     public static final int DEFAULT_MAX_DISMISS_COUNT = 3;
 
-    private static final String PREF_FILE_NAME_SUFFIX = ".irr_default_rule_engine";
+    static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
-    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-
-    private static SharedPreferences sPrefs;
-
-    private Context mContext;
     private IrrLayout.OnUserActionListener mListener;
 
     public static DefaultRuleEngine newInstance(final Context ctx, int appStartCount, int distinctDays, final int postponeDays, int maxDismissCount) {
-        PreferenceValue.PreferenceProvider pp = new PreferenceValue.PreferenceProvider() {
-            SharedPreferences prefs;
-
-            @Override
-            public SharedPreferences getPreferences() {
-                if (prefs == null) prefs = DefaultRuleEngine.getPreferences(ctx);
-                return prefs;
-            }
-        };
+        PreferenceValue.PreferenceProvider pp = new DefaultPreferenceProvider(ctx);
 
         RuleSet rule = new RuleSet.Builder()
                 .addRule(new DidRateRule(pp))
@@ -63,12 +49,11 @@ public class DefaultRuleEngine extends RuleEngine {
         ArrayList<Rule> rules = new ArrayList<>();
         rules.add(rule);
 
-        return new DefaultRuleEngine(ctx, rules);
+        return new DefaultRuleEngine(rules);
     }
 
-    public DefaultRuleEngine(Context ctx, List<Rule> rules) {
+    private DefaultRuleEngine(List<Rule> rules) {
         super(rules);
-        mContext = ctx;
     }
 
     public IrrLayout.OnUserActionListener getListener() {
@@ -85,33 +70,9 @@ public class DefaultRuleEngine extends RuleEngine {
         return "DefaultRuleEngine" + "\n" + super.toString(evaluate);
     }
 
-    public void reset() {
-        reset(mContext);
-    }
-
     public static void reset(Context ctx) {
-        getPreferences(ctx).edit().clear().apply();
+        DefaultPreferenceProvider pp = new DefaultPreferenceProvider(ctx);
+        pp.getPreferences().edit().clear().apply();
     }
 
-    public void trackAppStart() {
-        AppStartRule.trackAppStart(mContext);
-    }
-
-    public void trackDismissal() {
-        DismissRule.trackDismissal(mContext);
-    }
-
-    public void trackRated() {
-        DidRateRule.trackRated(mContext);
-    }
-
-    public static SharedPreferences getPreferences(Context ctx) {
-        if (sPrefs == null)
-            sPrefs = ctx.getSharedPreferences(getPrefFileName(ctx), Context.MODE_PRIVATE);
-        return sPrefs;
-    }
-
-    private static String getPrefFileName(Context ctx) {
-        return ctx.getPackageName() + PREF_FILE_NAME_SUFFIX;
-    }
 }

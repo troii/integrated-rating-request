@@ -1,7 +1,6 @@
 package net.mediavrog.irr;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import net.mediavrog.ruli.Value;
 
@@ -14,13 +13,8 @@ import static net.mediavrog.ruli.SimpleRule.Comparator.LT_EQ;
 
 public class DismissPostponeRule extends DismissRule<String> {
 
-    public DismissPostponeRule(final Context context, int maxDismissCount) {
-        this(new PreferenceValue.PreferenceProvider() {
-            @Override
-            public SharedPreferences getPreferences() {
-                return DefaultRuleEngine.getPreferences(context);
-            }
-        }, maxDismissCount);
+    public DismissPostponeRule(Context context, int postponeDays) {
+        this(new DefaultPreferenceProvider(context), postponeDays);
     }
 
     public DismissPostponeRule(PreferenceValue.PreferenceProvider pp, final int postponeDays) {

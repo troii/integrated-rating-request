@@ -10,8 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static net.mediavrog.irr.DefaultRuleEngine.getPreferences;
-
 public abstract class DismissRule<T extends Comparable<T>> extends SimpleRule<T> {
 
     static final String PREF_KEY_DISMISSAL_COUNT = "dismissCount";
@@ -33,8 +31,12 @@ public abstract class DismissRule<T extends Comparable<T>> extends SimpleRule<T>
         super(lhs, c, rhs);
     }
 
-    public static void trackDismissal(Context ctx) {
-        SharedPreferences s = getPreferences(ctx);
+    public static void trackDismissal(Context context) {
+        trackDismissal(new DefaultPreferenceProvider(context));
+    }
+
+    public static void trackDismissal(PreferenceValue.PreferenceProvider pp) {
+        SharedPreferences s = pp.getPreferences();
         int dismissalCount = s.getInt(PREF_KEY_DISMISSAL_COUNT, 0) + 1;
         String today = new SimpleDateFormat(DefaultRuleEngine.DEFAULT_DATE_FORMAT, Locale.getDefault()).format(new Date());
 
@@ -42,6 +44,14 @@ public abstract class DismissRule<T extends Comparable<T>> extends SimpleRule<T>
                 .putInt(PREF_KEY_DISMISSAL_COUNT, dismissalCount)
                 .putString(PREF_KEY_LAST_DISMISSED_AT, today)
                 .apply();
+    }
+
+    public static int getDismissalCount(Context context) {
+        return getDismissalCount(new DefaultPreferenceProvider(context));
+    }
+
+    public static int getDismissalCount(PreferenceValue.PreferenceProvider pp) {
+        return PreferenceValue.i(pp, PREF_KEY_DISMISSAL_COUNT).get();
     }
 
 }

@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import static net.mediavrog.irr.DefaultRuleEngine.DEFAULT_DATE_FORMAT;
-import static net.mediavrog.irr.DefaultRuleEngine.getPreferences;
 
 public abstract class AppUsageRule<T extends Comparable<T>> extends SimpleRule<T> {
 
@@ -35,8 +34,12 @@ public abstract class AppUsageRule<T extends Comparable<T>> extends SimpleRule<T
         super(lhs, c, rhs);
     }
 
-    public static void trackAppStart(Context ctx) {
-        SharedPreferences s = getPreferences(ctx);
+    public static void trackAppStart(Context context) {
+        trackAppStart(new DefaultPreferenceProvider(context));
+    }
+
+    public static void trackAppStart(PreferenceValue.PreferenceProvider pp) {
+        SharedPreferences s = pp.getPreferences();
         int appStarts = s.getInt(PREF_KEY_APP_STARTS, 0) + 1;
         int daysUsed = s.getInt(PREF_KEY_DAYS_USED, 1);
 
