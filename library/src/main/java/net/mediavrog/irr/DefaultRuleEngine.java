@@ -34,6 +34,7 @@ public class DefaultRuleEngine extends RuleEngine {
 
     static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
 
+    private final PreferenceValue.PreferenceProvider preferenceProvider;
     private IrrLayout.OnUserActionListener mListener;
 
     public static DefaultRuleEngine newInstance(final Context ctx, int appStartCount, int distinctDays, final int postponeDays, int maxDismissCount) {
@@ -49,11 +50,12 @@ public class DefaultRuleEngine extends RuleEngine {
         ArrayList<Rule> rules = new ArrayList<>();
         rules.add(rule);
 
-        return new DefaultRuleEngine(rules);
+        return new DefaultRuleEngine(pp, rules);
     }
 
-    private DefaultRuleEngine(List<Rule> rules) {
+    private DefaultRuleEngine(PreferenceValue.PreferenceProvider pp, List<Rule> rules) {
         super(rules);
+        this.preferenceProvider = pp;
     }
 
     public IrrLayout.OnUserActionListener getListener() {
@@ -65,14 +67,33 @@ public class DefaultRuleEngine extends RuleEngine {
         mListener = l;
     }
 
+    public void trackAppStart() {
+        AppStartRule.trackAppStart(preferenceProvider);
+    }
+
+    public void trackDismissal() {
+        DismissRule.trackDismissal(preferenceProvider);
+    }
+
+    public void trackRated() {
+        DidRateRule.trackRated(preferenceProvider);
+    }
+
+    public void reset() {
+        reset(preferenceProvider);
+    }
+
     @Override
     public String toString(boolean evaluate) {
         return "DefaultRuleEngine" + "\n" + super.toString(evaluate);
     }
 
     public static void reset(Context ctx) {
-        DefaultPreferenceProvider pp = new DefaultPreferenceProvider(ctx);
-        pp.getPreferences().edit().clear().apply();
+        reset(new DefaultPreferenceProvider(ctx));
+    }
+
+    public static void reset(PreferenceValue.PreferenceProvider preferenceProvider) {
+        preferenceProvider.getPreferences().edit().clear().apply();
     }
 
 }
